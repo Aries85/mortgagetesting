@@ -8,6 +8,8 @@ Test can be run with command `gradle build`.
 
 Unchecked exceptions are preferred as in most cases it does not make sense to recover or it is not possible.
 
+Web Driver configuration is in `src/integrationTest/java/resources/test-settings.properties`.
+
 ## Libraries used
 - Chrome and Gecko Web Drivers
 - Selenium
