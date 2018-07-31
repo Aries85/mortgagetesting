@@ -22,10 +22,10 @@ public class MortgagePaymentCalculatorPage {
     private static final String XPATH_CALCULATOR_TITLE = "//span[@class='calculator-title']";
     private static final String XPATH_FORM = "//form[@id='calculator-form']";
     private static final String XPATH_FIELD_BY_LABEL_NAME = ".//label[text()='%s']/following-sibling::div/input";
-    private static final String STEP2_XPATH_FIELD_BY_LABEL_NAME = ".//label[text()='%s']/following-sibling::input"; // Dirty solution for values on second page. in real world project I would investigate more.
-    private static final String XPATH_STEP2_BUTTON = "//a[@class='calculator-button next-button']";
-    private static final String XPATH_FINISH_BUTTON = "//li[@class='next finish']/a[@class='calculator-button finish-button']"; // Matching by parent li is necessary as well, there are multiple matching a elements
-    private static final String XPATH_RESULTS_TABLE = "//div[@id='result_container']";
+    private static final String STEP2_XPATH_FIELD_BY_LABEL_NAME = ".//label[text()='%s']/following-sibling::input";
+    private static final String XPATH_STEP2_BUTTON = ".//a[@class='calculator-button next-button']";
+    private static final String XPATH_FINISH_BUTTON = ".//li[@class='next finish']/a[@class='calculator-button finish-button']"; // Matching by parent li is necessary as well, there are multiple matching a elements
+    private static final String XPATH_RESULTS_TABLE = "//div[@id='result_container']"; // Form element is displayed in browser, however Selenium says it has been detached. Using global match instead.
     private static final String XPATH_RESULT_ROW_BY_NAME = ".//th[text()='%s']/following-sibling::td";
 
     private static final String TITLE_FORM = "How Much Will My Payments Be?";
@@ -63,7 +63,7 @@ public class MortgagePaymentCalculatorPage {
         final String currentCalculatorTitle = titleElement.getText();
         if (!TITLE_FORM.equals(currentCalculatorTitle)) {
             throw new RuntimeException("Wrong calculator title is opened on page. Expected: \"" + TITLE_FORM + "\" Actual: \"" + currentCalculatorTitle + "\"");
-        };
+        }
         formElement = findSingleElement(titleElement, XPATH_FORM);
     }
 
