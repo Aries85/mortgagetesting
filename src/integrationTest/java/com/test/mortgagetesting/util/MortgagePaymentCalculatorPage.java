@@ -1,4 +1,4 @@
-package com.test.mortgagetesting;
+package com.test.mortgagetesting.util;
 
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;

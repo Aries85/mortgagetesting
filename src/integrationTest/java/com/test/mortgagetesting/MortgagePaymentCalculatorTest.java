@@ -1,10 +1,12 @@
-import com.test.mortgagetesting.MortgagePaymentCalculatorPage;
-import com.test.mortgagetesting.Settings;
+package com.test.mortgagetesting;
+
+import com.test.mortgagetesting.util.MortgagePaymentCalculatorPage;
+import com.test.mortgagetesting.util.Settings;
 import org.assertj.core.api.JUnitSoftAssertions;
 import org.junit.*;
 import org.openqa.selenium.WebDriver;
 
-import static com.test.mortgagetesting.MortgagePaymentCalculatorPage.*;
+import static com.test.mortgagetesting.util.MortgagePaymentCalculatorPage.*;
 
 
 public class MortgagePaymentCalculatorTest {

@@ -1,4 +1,4 @@
-package com.test.mortgagetesting;
+package com.test.mortgagetesting.util;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
