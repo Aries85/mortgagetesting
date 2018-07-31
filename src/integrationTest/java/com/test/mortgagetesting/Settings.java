@@ -25,10 +25,10 @@ public class Settings {
     private Properties properties;
     private DriverType driverType;
 
-    public Settings() {
+    public Settings(String propertiesFileName) {
         try {
             properties = new Properties();
-            properties.load(Files.newInputStream(Util.getResourceFilePath("test-settings.properties")));
+            properties.load(Files.newInputStream(Util.getResourceFilePath(propertiesFileName)));
             processSettings();
         } catch (IOException e) {
             // There is no way to recover from error when reading properties file.
