@@ -20,12 +20,12 @@ public class MortgagePaymentCalculatorPage {
     private static final int WAIT_TIME_FOR_ELEMENT = 5;
 
     private static final String XPATH_CALCULATOR_TITLE = "//span[@class='calculator-title']";
-    private static final String XPATH_FORM = "./parent::div";
+    private static final String XPATH_FORM = "//form[@id='calculator-form']";
     private static final String XPATH_FIELD_BY_LABEL_NAME = ".//label[text()='%s']/following-sibling::div/input";
-    private static final String STEP2_XPATH_FIELD_BY_LABEL_NAME = "//label[text()='%s']/following-sibling::input"; // Dirty solution for values on second page. in real world project I would investigate more.
+    private static final String STEP2_XPATH_FIELD_BY_LABEL_NAME = ".//label[text()='%s']/following-sibling::input"; // Dirty solution for values on second page. in real world project I would investigate more.
     private static final String XPATH_STEP2_BUTTON = "//a[@class='calculator-button next-button']";
     private static final String XPATH_FINISH_BUTTON = "//li[@class='next finish']/a[@class='calculator-button finish-button']"; // Matching by parent li is necessary as well, there are multiple matching a elements
-    private static final String XPATH_RESULTS_TABLE = "//div[@id='analysisDiv']";
+    private static final String XPATH_RESULTS_TABLE = "//div[@id='result_container']";
     private static final String XPATH_RESULT_ROW_BY_NAME = ".//th[text()='%s']/following-sibling::td";
 
     private static final String TITLE_FORM = "How Much Will My Payments Be?";
@@ -48,7 +48,10 @@ public class MortgagePaymentCalculatorPage {
     public static final String MORTGAGE_CALCULATOR_URL = "https://www.mortgageloan.com/calculator";
     private WebElement formElement;
     private boolean onStep2 = false;
+    private boolean onResults = false;
     private WebDriver driver;
+    /** Set when accessing results page */
+    private WebElement resultsTableElement;
 
     public MortgagePaymentCalculatorPage(WebDriver driver) {
         this.driver = driver;
@@ -67,30 +70,35 @@ public class MortgagePaymentCalculatorPage {
     public void setFieldValueByLabel(String label, String value) {
         final WebElement inputElement;
         if (!onStep2) {
-            inputElement = formElement.findElement(By.xpath(String.format(XPATH_FIELD_BY_LABEL_NAME, label)));
+            inputElement = findSingleElement(formElement, String.format(XPATH_FIELD_BY_LABEL_NAME, label));
         } else {
-            inputElement = formElement.findElement(By.xpath(String.format(STEP2_XPATH_FIELD_BY_LABEL_NAME, label)));
+            inputElement = findSingleElement(formElement, String.format(STEP2_XPATH_FIELD_BY_LABEL_NAME, label));
         }
         inputElement.clear();
         inputElement.sendKeys(value);
     }
 
     public String getResultByLabel(String label) {
-        WebElement resultsTableElement = driver.findElement(By.xpath(XPATH_RESULTS_TABLE));
-        final WebElement resultValueElement = resultsTableElement.findElement(By.xpath(String.format(XPATH_RESULT_ROW_BY_NAME, label)));
+        if (!onResults) {
+            throw new RuntimeException("Developer error: Results can be only displayed on results page.");
+        }
+        final WebElement resultValueElement = findSingleElement(resultsTableElement, String.format(XPATH_RESULT_ROW_BY_NAME, label));
         return resultValueElement.getText();
     }
 
     public void clickNextButton() {
-        clickElementByXpath(XPATH_STEP2_BUTTON);
+        clickElementOnFormByXpath(XPATH_STEP2_BUTTON);
         onStep2 = true;
     }
 
     public void clickShowResultsButton() {
-        clickElementByXpath(XPATH_FINISH_BUTTON);
+        clickElementOnFormByXpath(XPATH_FINISH_BUTTON);
+        onStep2 = false;
+        onResults = true;
+        resultsTableElement = driver.findElement(By.xpath(XPATH_RESULTS_TABLE));
     }
 
-    private void clickElementByXpath(String xpath) {
+    private void clickElementOnFormByXpath(String xpath) {
         final WebElement linkElement = formElement.findElement(By.xpath(xpath));
         linkElement.click();
     }
